@@ -1,5 +1,5 @@
 #! /usr/bin/bash
--e # stop if it fails at any point
+set -e # stop if it fails at any point
 
 #echo "==== db-setup"
 CYAN='\033[1;36m'
@@ -10,7 +10,11 @@ printf "${CYAN}==== ${LABEL}${NO_COLOR}\n"
 bin_path="$(realpath .)/bin"
 
 source "$bin_path/db/drop"
+sleep 2
 source "$bin_path/db/create"
+sleep 2
 source "$bin_path/db/schema-load"
+sleep 2
 source "$bin_path/db/seed"
+sleep 2
 python "$bin_path/db/update_cognito_user_ids"

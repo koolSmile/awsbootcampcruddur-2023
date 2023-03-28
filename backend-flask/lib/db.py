@@ -68,16 +68,6 @@ class Db:
         cur.execute(wrapped_sql,params)
         json = cur.fetchone()
         return json[0]
-  
-  # when we want to return a a single value
-  def query_value(self,sql,params={}):
-    self.print_sql('value',sql,params)
-
-    with self.pool.connection() as conn:
-      with conn.cursor() as cur:
-        cur.execute(sql,params)
-        json = cur.fetchone()
-        return json[0] 
 
   # When we want to return an array of json objects
   def query_object_json(self,sql,params={}):
@@ -94,6 +84,14 @@ class Db:
           "{}"
         else:
           return json[0]
+  # when we want to return a a single value
+  def query_value(self,sql,params={}):
+    self.print_sql('value',sql,params)
+    with self.pool.connection() as conn:
+      with conn.cursor() as cur:
+        cur.execute(sql,params)
+        json = cur.fetchone()
+        return json[0]         
   def query_wrap_object(self,template):
     sql = f"""
     (SELECT COALESCE(row_to_json(object_row),'{{}}'::json) FROM (
